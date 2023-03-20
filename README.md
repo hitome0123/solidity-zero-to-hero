@@ -17,7 +17,7 @@ Copy all and paste on the remix,compile and deploy.
 At a high level, the Uniswap protocol consists of the following main contracts:
 
 Factory Contract: This contract is responsible for deploying new exchange contracts for each token pair. It keeps track of all the exchange contracts that have been deployed and provides a function to create a new exchange contract for a given token pair.
-工厂合约：该合约负责为每个代币对部署新的交换合约。它跟踪所有已部署的交换合约，并提供为给定代币对创建新交换合约的功能。
+      工厂合约：该合约负责为每个代币对部署新的交换合约。它跟踪所有已部署的交换合约，并提供为给定代币对创建新交换合约的功能。
 
 Exchange Contract: This is the contract that handles the actual exchange of tokens. Each exchange contract is created for a specific token pair. It holds the balances of the tokens being traded and provides functions for users to buy and sell tokens.
 交易合约：这是处理代币实际交易的合约。每个交换合约都是为特定的代币对创建的。它持有正在交易的代币余额，并为用户提供买卖代币的功能。
