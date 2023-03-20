@@ -30,6 +30,34 @@ contract UniswapV2Factory is IUniswapV2Factory{
   function allPairsLength() external view returns(uint){
     return allPairs.length;
     }
+    //作用是创建新Uniswap对的两个token，变量的目的是确保两个标记始终以一致的顺序存储在映射中，而不管它们作为参数传递的顺序如何。
   function createPair(address tokenA, address tokenB)external returns(address pair){
+    require(tokenA !=tokenB,"UniswapV2:IDENTICAL_ADDRESSES");
+    (address token0,address token1)=tokenA<tokenB ?(tokenA,tokenB):(tokenB,tokenA);//使用三元运算符
+    //如果tokenA小于tokenB,则token0对应tokenA,token1对应tokenB。反之亦然。
+    //这样，token0将始终包含较小的token地址，并将token1始终包含较大的token地址。
+    require (token0 !=address(0),"UniswapV2:ZERO_ADDRESS");
+    require(getPair[token0][token1]==address(0),"UniswapV2:PAIR_EXISTS");
+    bytes memory bytecode=type(UniswapV2Pair).creationCode;//待续，，
+    bytes32 salt=keccak256(abi.encodePacked(token0,token1));
+     assembly {
+            pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
+        }
+        IUniswapV2Pair(pair).initialize(token0, token1);
+        getPair[token0][token1] = pair;
+        getPair[token1][token0] = pair; // populate mapping in the reverse direction
+        allPairs.push(pair);
+        emit PairCreated(token0, token1, pair, allPairs.length);
+    }
+}
+    function setFeeTo(address _feeTo) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        feeTo = _feeTo;
+    }
+
+    function setFeeToSetter(address _feeToSetter) external {
+        require(msg.sender == feeToSetter, 'UniswapV2: FORBIDDEN');
+        feeToSetter = _feeToSetter;
+    
   }
   }
